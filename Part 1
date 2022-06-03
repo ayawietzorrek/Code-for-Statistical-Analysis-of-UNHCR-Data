@@ -1,0 +1,39 @@
+setwd("/Users/AyaWietzorrek/UNHCR data/Households")
+
+myfiles <- dir()
+filenum <- length(myfiles)
+
+mydata <- read.csv(myfiles[1])
+
+myvars <- colnames(mydata)
+varnum <- length(myvars)
+
+levs <- matrix(data=0, nrow = varnum, ncol = filenum)
+colnames(levs) = myfiles
+rownames(levs) = myvars
+
+for (f in myfiles) {
+	mydata <- read.csv(f)
+	datvars <- colnames(mydata)
+	for (v in myvars) {
+		if (v %in% datvars) {
+			uniques <- unique(mydata[[v]])
+			levs[v,f] = as.numeric(length(uniques))
+			if("" %in% uniques) {
+				levs[v,f] <- as.numeric(levs[v,f])-1
+			}
+			
+			if(NA %in% uniques) {
+				levs[v,f] <- as.numeric(levs[v,f])-1
+			}
+			
+			if(!is.numeric(uniques)) {
+				levs[v,f] <- (-1)*as.numeric(levs[v,f])
+			}
+		}
+		else
+		{levs[v,f] <- "" }
+	}
+}
+
+#write.csv(levs, file="../TEST1.csv")
