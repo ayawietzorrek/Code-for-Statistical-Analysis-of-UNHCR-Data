@@ -1,3 +1,5 @@
+# Part 1 – Finding all variables from dataset V7 in the other 4 datasets and counting categories 
+
 setwd("/Users/AyaWietzorrek/UNHCR data/Households")
 
 myfiles <- dir()
@@ -37,3 +39,4 @@ for (f in myfiles) {
 }
 
 #write.csv(levs, file="../TEST1.csv")
+
