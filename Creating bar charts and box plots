@@ -1,0 +1,177 @@
+# Part 2 -  Creating bar charts and boxplots per variable
+
+textvars <- c()
+contvars <- c()
+catvars <- c()
+binvars <- c()
+for (v in myvars) {
+	if ("" %in% levs[v,]) {next}
+	if (min(as.numeric(levs[v,]))==-2) {binvars <- c(binvars,v)}
+	if (max(as.numeric(levs[v,]))<0) {textvars <- c(textvars,v); next}
+	if (max(as.numeric(levs[v,]))>7) {contvars <- c(contvars,v); next}
+	if (max(as.numeric(levs[v,]))==2) {binvars <- c(binvars,v); next}
+	
+	catvars <- c(catvars,v)
+}
+
+md1 <- read.csv(myfiles[1])
+md2 <- read.csv(myfiles[2])
+md3 <- read.csv(myfiles[3])
+md4 <- read.csv(myfiles[4])
+md5 <- read.csv(myfiles[5])
+
+plotboxfac <- function(vv, ff) {
+	df1 = data.frame(year="V7", fac=md1[ff], d=md1[vv])
+	df1 <- df1[which(df1[ff] != ""),]
+	df1 <- df1[which(df1[vv] != ""),]
+	df1 <- df1[which(!is.na(df1[vv])),]
+	df1 <- df1[which(!is.na(df1[ff])),]
+	colnames(df1) <- c("year", "fac", "d")
+	df2 = data.frame(year="V8", fac=md2[ff], d=md2[vv])
+	df2 <- df2[which(df2[ff] != ""),]
+	df2 <- df2[which(df2[vv] != ""),]
+	df2 <- df2[which(!is.na(df2[vv])),]
+	df2 <- df2[which(!is.na(df2[ff])),]
+	colnames(df2) <- c("year", "fac", "d")
+	df3 = data.frame(year="V8.2", fac=md3[ff], d=md3[vv])
+	df3 <- df3[which(df3[ff] != ""),]
+	df3 <- df3[which(df3[vv] != ""),]
+	df3 <- df3[which(!is.na(df3[vv])),]
+	df3 <- df3[which(!is.na(df3[ff])),]
+	colnames(df3) <- c("year", "fac", "d")
+	df4 = data.frame(year="V9", fac=md4[ff], d=md4[vv])
+	df4 <- df4[which(df4[ff] != ""),]
+	df4 <- df4[which(df4[vv] != ""),]
+	df4 <- df4[which(!is.na(df4[vv])),]
+	df4 <- df4[which(!is.na(df4[ff])),]
+	colnames(df4) <- c("year", "fac", "d")
+	df5 = data.frame(year="V9.2", fac=md5[ff], d=md5[vv])
+	df5 <- df5[which(df5[ff] != ""),]
+	df5 <- df5[which(df5[vv] != ""),]
+	df5 <- df5[which(!is.na(df5[vv])),]
+	df5 <- df5[which(!is.na(df5[ff])),]
+	colnames(df5) <- c("year", "fac", "d")
+	
+	df <- rbind(df1,df2,df3,df4,df5)
+	boxplot(d~year*fac, data=df, notch=TRUE, ylab=ff, xlab=vv, horizontal=TRUE, col=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442"))
+}
+plotbox <- function(vv) {
+	df1 = data.frame(year="V7", d=md1[vv])
+	df1 <- df1[which(df1[vv] != ""),]
+	df1 <- df1[which(!is.na(df1[vv])),]
+	colnames(df1) <- c("year", "d")
+	df2 = data.frame(year="V8", d=md2[vv])
+	df2 <- df2[which(df2[vv] != ""),]
+	df2 <- df2[which(!is.na(df2[vv])),]
+	colnames(df2) <- c("year", "d")
+	df3 = data.frame(year="V8.2", d=md3[vv])
+	df3 <- df3[which(df3[vv] != ""),]
+	df3 <- df3[which(!is.na(df3[vv])),]
+	colnames(df3) <- c("year", "d")
+	df4 = data.frame(year="V9", d=md4[vv])
+	df4 <- df4[which(df4[vv] != ""),]
+	df4 <- df4[which(!is.na(df4[vv])),]
+	colnames(df4) <- c("year", "d")
+	df5 = data.frame(year="V9.2", d=md5[vv])
+	df5 <- df5[which(df5[vv] != ""),]
+	df5 <- df5[which(!is.na(df5[vv])),]
+	colnames(df5) <- c("year", "d")
+	
+	df <- rbind(df1,df2,df3,df4,df5)
+	boxplot(d~year, data=df, notch=TRUE, ylab="Year", xlab=vv, horizontal=TRUE, col=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))
+}
+
+pdf("../TEST2.pdf")
+for (v in contvars) {
+		plotbox(v)
+}
+dev.off()
+
+plotbar <- function(vv) {
+	df1 = data.frame(year="V7", d=md1[vv])
+	df1 <- df1[which(df1[vv] != ""),]
+	df1 <- df1[which(!is.na(df1[vv])),]
+	colnames(df1) <- c("year", "d")
+	df2 = data.frame(year="V8", d=md2[vv])
+	df2 <- df2[which(df2[vv] != ""),]
+	df2 <- df2[which(!is.na(df2[vv])),]
+	colnames(df2) <- c("year", "d")
+	df3 = data.frame(year="V8.2", d=md3[vv])
+	df3 <- df3[which(df3[vv] != ""),]
+	df3 <- df3[which(!is.na(df3[vv])),]
+	colnames(df3) <- c("year", "d")
+	df4 = data.frame(year="V9", d=md4[vv])
+	df4 <- df4[which(df4[vv] != ""),]
+	df4 <- df4[which(!is.na(df4[vv])),]
+	colnames(df4) <- c("year", "d")
+	df5 = data.frame(year="V9.2", d=md5[vv])
+	df5 <- df5[which(df5[vv] != ""),]
+	df5 <- df5[which(!is.na(df5[vv])),]
+	colnames(df5) <- c("year", "d")
+	
+	df <- rbind(df1,df2,df3,df4,df5)
+	
+	tt <- table(df$d,df$year)
+	cs <- colSums(tt)
+	if(prod(cs)>0){
+	tt <- t(t(tt)/cs)
+	tt <- tt[which(rowSums(tt)>0),]
+	barplot(tt, ylab=vv, legend=TRUE, col=c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"))}
+}
+
+pdf("../TEST4.pdf")
+for (v in textvars) {
+		plotbar(v)
+}
+dev.off()
+
+
+pdf("../TEST5.pdf")
+for (v in binvars) {
+		plotbar(v)
+}
+dev.off()
+
+
+plotmedianmean <- function(vv) {
+	df1 = data.frame(year="V7", d=md1[vv])
+	df1 <- df1[which(df1[vv] != ""),]
+	df1 <- df1[which(!is.na(df1[vv])),]
+	colnames(df1) <- c("year", "d")
+	df2 = data.frame(year="V8", d=md2[vv])
+	df2 <- df2[which(df2[vv] != ""),]
+	df2 <- df2[which(!is.na(df2[vv])),]
+	colnames(df2) <- c("year", "d")
+	df3 = data.frame(year="V8.2", d=md3[vv])
+	df3 <- df3[which(df3[vv] != ""),]
+	df3 <- df3[which(!is.na(df3[vv])),]
+	colnames(df3) <- c("year", "d")
+	df4 = data.frame(year="V9", d=md4[vv])
+	df4 <- df4[which(df4[vv] != ""),]
+	df4 <- df4[which(!is.na(df4[vv])),]
+	colnames(df4) <- c("year", "d")
+	df5 = data.frame(year="V9.2", d=md5[vv])
+	df5 <- df5[which(df5[vv] != ""),]
+	df5 <- df5[which(!is.na(df5[vv])),]
+	colnames(df5) <- c("year", "d")
+	
+	barplot(height=matrix(c(median(df1$d),mean(df1$d),median(df2$d), mean(df2$d), median(df3$d),
+						mean(df3$d),median(df4$d),mean(df4$d), median(df5$d), mean(df5$d)), nr=2), 
+						xlab="Year/Sample", ylab=vv, names.arg=c("V7","V8","V8.2","V9","V9.2"), col=c("#999999", "#EEEEEE", "#E69F00", "#F9CC00", "#56B4E9", "#77D8FA", "#009E73", "#00C799", "#F0E442", "#FFF899"), beside=T)
+	
+}
+
+pdf("../TEST7medianMean.pdf")
+for (v in contvars) {
+		plotmedianmean(v)
+}
+dev.off()
+
+
+plotboxfac(contvars[1],textvars[1])
+
+df = data.frame(year=myfiles[1], fac=mydata[textvars[1]], d=mydata[contvars[1]])
+colnames(df) <- c("year", "fac", "d")
+boxplot(d~fac, data=df, notch=TRUE, xlab=contvars[1])
+
+
