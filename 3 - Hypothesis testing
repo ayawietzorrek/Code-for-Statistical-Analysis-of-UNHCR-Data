@@ -1,0 +1,138 @@
+Part C – Hypothesis testing (Wilcoxon rank-sum test and Chi square test)
+testing <- function(vv) {
+  df1 = data.frame(year="V7", d=md1[vv])
+  df1 <- df1[which(df1[vv] != ""),]
+  df1 <- df1[which(!is.na(df1[vv])),]
+  colnames(df1) <- c("year", "d")
+  df2 = data.frame(year="V8", d=md2[vv])
+  df2 <- df2[which(df2[vv] != ""),]
+  df2 <- df2[which(!is.na(df2[vv])),]
+  colnames(df2) <- c("year", "d")
+  df3 = data.frame(year="V8.2", d=md3[vv])
+  df3 <- df3[which(df3[vv] != ""),]
+  df3 <- df3[which(!is.na(df3[vv])),]
+  colnames(df3) <- c("year", "d")
+  df4 = data.frame(year="V9", d=md4[vv])
+  df4 <- df4[which(df4[vv] != ""),]
+  df4 <- df4[which(!is.na(df4[vv])),]
+  colnames(df4) <- c("year", "d")
+  df5 = data.frame(year="V9.2", d=md5[vv])
+  df5 <- df5[which(df5[vv] != ""),]
+  df5 <- df5[which(!is.na(df5[vv])),]
+  colnames(df5) <- c("year", "d")
+  
+  t1t <- t.test(df1$d,df2$d)
+  t1w <- wilcox.test(df1$d,df2$d)
+  
+  t2t <- t.test(df2$d,df3$d)
+  t2w <- wilcox.test(df2$d,df3$d)
+  
+  t3t <- t.test(df3$d,df4$d)
+  t3w <- wilcox.test(df3$d,df4$d)
+  
+  t4t <- t.test(df4$d,df5$d)
+  t4w <- wilcox.test(df4$d,df5$d)
+  
+  t5t <- t.test(df1$d,df5$d)
+  t5w <- wilcox.test(df1$d,df5$d)
+  
+  print(cat("Tests on", vv, ". Pairwise, unpaired."))
+  
+  print("T-test results (parametric):")
+  print(t1t)
+  print(t2t)
+  print(t3t)
+  print(t4t)
+  print(t5t)
+  
+  print("Wilcoxon test results (non-parametric):")	
+  print(t1w)
+  print(t2w)
+  print(t3w)
+  print(t4w)
+  print(t5w)
+  
+  print(median(df1$d))
+  print(median(df2$d))
+  print(median(df3$d))
+  print(median(df4$d))		
+  print(median(df5$d))
+  
+}
+
+testingCat <- function(vv) {
+  df1 = data.frame(year="V7", d=md1[vv])
+  df1 <- df1[which(df1[vv] != ""),]
+  df1 <- df1[which(!is.na(df1[vv])),]
+  colnames(df1) <- c("year", "d")
+  df2 = data.frame(year="V8", d=md2[vv])
+  df2 <- df2[which(df2[vv] != ""),]
+  df2 <- df2[which(!is.na(df2[vv])),]
+  colnames(df2) <- c("year", "d")
+  df3 = data.frame(year="V8.2", d=md3[vv])
+  df3 <- df3[which(df3[vv] != ""),]
+  df3 <- df3[which(!is.na(df3[vv])),]
+  colnames(df3) <- c("year", "d")
+  df4 = data.frame(year="V9", d=md4[vv])
+  df4 <- df4[which(df4[vv] != ""),]
+  df4 <- df4[which(!is.na(df4[vv])),]
+  colnames(df4) <- c("year", "d")
+  df5 = data.frame(year="V9.2", d=md5[vv])
+  df5 <- df5[which(df5[vv] != ""),]
+  df5 <- df5[which(!is.na(df5[vv])),]
+  colnames(df5) <- c("year", "d")
+  
+  df <- rbind(df1,df2,df3,df4,df5)
+  
+  tt <- table(df$d,df$year)
+  #cs <- colSums(tt)
+  #tt <- t(t(tt)/cs)
+  tt <- tt[which(rowSums(tt)>0),]
+  
+  print(cat("Tests on", vv, "."))
+  print(tt)
+  ct <- chisq.test(tt)
+  print(ct)
+  
+  print("Individual tests:")
+  
+  for (r in rownames(tt)) {
+    print(r)
+    t1c <- chisq.test(matrix(c(tt[r,1], colSums(tt)[1]-tt[r,1], tt[r,2], colSums(tt)[2]-tt[r,2]), nrow=2))
+    print(t1c)
+    print(t1c$expected)
+    print(t1c$observed-t1c$expected) #calculates the raw residuals 
+    print((t1c$observed-t1c$expected)/t1c$expected) #calculates the relative residual, by dividing the difference by the expected value 
+    
+    
+    t2c <- chisq.test(matrix(c(tt[r,2], colSums(tt)[2]-tt[r,2], tt[r,3], colSums(tt)[3]-tt[r,3]), nrow=2))
+    print(t2c)
+    print(t2c$expected)
+    print(t2c$observed-t2c$expected) #calculates the raw residuals 
+    print((t2c$observed-t2c$expected)/t2c$expected) #calculates the relative residual, by dividing the difference by the expected value 
+    
+    t3c <- chisq.test(matrix(c(tt[r,3], colSums(tt)[3]-tt[r,3], tt[r,4], colSums(tt)[4]-tt[r,4]), nrow=2))
+    print(t3c)
+    print(t3c$expected)
+    print(t3c$observed-t3c$expected) #calculates the raw residuals 
+    print((t3c$observed-t3c$expected)/t3c$expected) #calculates the relative residual, by dividing the difference by the expected value 
+    
+    t4c <- chisq.test(matrix(c(tt[r,4], colSums(tt)[4]-tt[r,4], tt[r,5], colSums(tt)[5]-tt[r,5]), nrow=2))
+    print(t4c)
+    print(t4c$expected)
+    print(t4c$observed-t4c$expected) #calculates the raw residuals 
+    print((t4c$observed-t4c$expected)/t4c$expected) #calculates the relative residual, by dividing the difference by the expected value 
+    
+    t5c <- chisq.test(matrix(c(tt[r,1], colSums(tt)[1]-tt[r,1], tt[r,5], colSums(tt)[5]-tt[r,5]), nrow=2))
+    print(t5c)
+    print(t5c$expected)
+    print(t5c$observed-t5c$expected) #calculates the raw residuals 
+    print((t5c$observed-t5c$expected)/t5c$expected) #calculates the relative residual, by dividing the difference by the expected value 
+    
+  }
+  cs <- colSums(tt)
+  tt <- t(t(tt)/cs)
+  tt <- tt[which(rowSums(tt)>0),]
+  print(tt)
+}
+
